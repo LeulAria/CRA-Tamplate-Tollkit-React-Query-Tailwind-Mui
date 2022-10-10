@@ -1,12 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import "./App.css";
+import logo from "./logo.svg";
+import { Counter } from "./features/counter/Counter";
+import { useQuery } from "@tanstack/react-query";
+
+function ReactQueryExample() {
+  const { isLoading, error, data } = useQuery(["repoData"], () =>
+    fetch("https://api.github.com/repos/tannerlinsley/react-query").then(
+      (res) => res.json()
+    )
+  );
+
+  if (isLoading) return <>{"Loading..."}</>;
+
+  if (error) return <>{"An error has occurred: "}</>;
+
+  return (
+    <div>
+      <h1>{data.name}</h1>
+      <p>{data.description}</p>
+      <strong>👀 {data.subscribers_count}</strong>{" "}
+      <strong>✨ {data.stargazers_count}</strong>{" "}
+      <strong>🍴 {data.forks_count}</strong>
+    </div>
+  );
+}
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <h1 className="text-3xl font-bold underline">Tailwind Test</h1>
+
         <img src={logo} className="App-logo" alt="logo" />
         <Counter />
         <p>
@@ -51,6 +75,7 @@ function App() {
           </a>
         </span>
       </header>
+      <ReactQueryExample />
     </div>
   );
 }
